@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/Models/Task.dart';
+import 'package:todo_app/Models/Todo.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,14 +9,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<Todo> taskList = [];
   int id = 0;
-  final myController = TextEditingController();
+  late final TextEditingController todoTextController;
+  @override
+  void initState() {
+    super.initState();
+    todoTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    todoTextController.dispose();
+    super.dispose();
+  }
+
   void addTaskToList() {
-    if (myController.text.isNotEmpty) {
-      id++;
-      taskList.add(Todo(id, myController.text));
-      myController.clear();
-      setState(() {});
-    }
+    // if (todoTextController.text.isNotEmpty) {
+    id++;
+    taskList.add(Todo(id: id, task: todoTextController.text));
+    todoTextController.clear();
+    setState(() {});
+    // }
   }
 
   @override
@@ -25,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('ToDo App'),
+        title: Text('TODO App'),
       ),
       body: Column(
         children: [
@@ -33,12 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: size.width * 0.75,
-                  height: size.height * 0.10,
-                  child: TextField(
-                    controller: myController,
+                  height: 50,
+                  child: TextFormField(
+                    controller: todoTextController,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), hintText: 'Add a task'),
                   ),
@@ -46,11 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: IconButton(
-                    onPressed: addTaskToList,
+                    onPressed:
+                        todoTextController.text.isEmpty ? null : addTaskToList,
                     icon: Icon(
                       Icons.add,
-                      color: Colors.green,
-                      size: 40,
                     ),
                   ),
                 ),

@@ -1,5 +1,5 @@
 class Todo {
   final int id;
   final String task;
-  Todo(this.id, this.task);
+  Todo({required this.id, required this.task});
 }
